@@ -4,10 +4,13 @@ import numpy as np
 import time
 
 # 设置图像路径
-button_red_img = 'button_red.png'
-button_green_img = 'button_green.png'
-checkbox_img = 'checkbox.png'
-finish_img = 'finish.png'
+# 需要点击的按钮
+button_red_img = 'button_red.png'  # 红色按钮 - 需要点击
+checkbox_img = 'checkbox.png'    # 复选框 - 需要点击
+
+# 已点击状态的指示器
+button_green_img = 'button_green.png'  # 绿色按钮 - 已点击状态
+finish_img = 'finish.png'          # 完成按钮 - 已点击状态
 
 # 匹配图像并返回中心坐标
 def locate_button(template_path, confidence=0.8):
@@ -43,19 +46,25 @@ def auto_click_button(template_path, button_name):
         print(f"未检测到{button_name}，无需点击")
         return False
 
-# 检查所有按钮
+# 检查按钮状态并点击需要点击的按钮
 def check_all_buttons():
-    # 检查并点击 hyper.py 中的红色按钮
-    auto_click_button(button_red_img, "红色按钮")
+    # 检查红色按钮是否存在，如果存在则点击
+    red_clicked = auto_click_button(button_red_img, "红色按钮")
     
-    # 检查并点击 hyper.py 中的绿色按钮
-    auto_click_button(button_green_img, "绿色按钮")
+    # 检查绿色按钮是否存在（已点击状态的指示器）
+    green_result = locate_button(button_green_img)
+    if green_result:
+        x, y, confidence = green_result
+        print(f"检测到绿色按钮（已点击状态），位置：({x}, {y})，匹配度：{confidence:.2f}")
     
-    # 检查并点击 onprover.py 中的复选框
-    auto_click_button(checkbox_img, "复选框")
+    # 检查复选框是否存在，如果存在则点击
+    checkbox_clicked = auto_click_button(checkbox_img, "复选框")
     
-    # 检查并点击 onprover.py 中的完成按钮
-    auto_click_button(finish_img, "完成按钮")
+    # 检查完成按钮是否存在（已点击状态的指示器）
+    finish_result = locate_button(finish_img)
+    if finish_result:
+        x, y, confidence = finish_result
+        print(f"检测到完成按钮（已点击状态），位置：({x}, {y})，匹配度：{confidence:.2f}")
 
 # 主循环（每隔5秒检测一次）
 def main_loop():
